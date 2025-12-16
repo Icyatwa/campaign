@@ -59,8 +59,8 @@ function WebsitesBarChart() {
   const clickRate = ((totalClicks / totalViews) * 100).toFixed(1);
 
   useEffect(() => {
-    const width = 1000;
-    const height = 600;
+    const width = containerRef.current?.offsetWidth || 1000;
+    const height = containerRef.current?.offsetHeight || 400;
 
     const svg = d3.select(svgRef.current)
       .attr('width', width)
@@ -69,7 +69,7 @@ function WebsitesBarChart() {
     svg.selectAll('*').remove();
 
     const projection = d3.geoNaturalEarth1()
-      .scale(160)
+      .scale(Math.min(width, height) * 0.16)
       .translate([width / 2, height / 2]);
 
     const path = d3.geoPath().projection(projection);
@@ -149,7 +149,7 @@ function WebsitesBarChart() {
 
   const formatYAxis = (value) => {
     if (value >= 1000) {
-      return `${(value / 1000).toFixed(2)}k`;
+      return `${(value / 1000).toFixed(1)}k`;
     }
     return value;
   };
@@ -168,13 +168,13 @@ function WebsitesBarChart() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
-      <div className='bg-white rounded-2xl shadow-lg'>
+    <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-2 sm:p-4 md:p-8">
+      <div className='bg-white rounded-lg sm:rounded-2xl shadow-lg'>
         {/* Bar Chart Section */}
-        <div className="w-full max-w-6xl mx-auto mb-12 p-8">
-          <h2 className="text-3xl font-bold text-black mb-6">Website Visitors Analytics</h2>
-          <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={visitorData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+        <div className="w-full max-w-6xl mx-auto mb-6 sm:mb-12 p-4 sm:p-6 md:p-8">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black mb-4 sm:mb-6">Website Visitors Analytics</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={visitorData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
               <defs>
                 <linearGradient id="gradient-rj" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#3b82f6" />
@@ -195,15 +195,19 @@ function WebsitesBarChart() {
               <XAxis 
                 dataKey="name" 
                 stroke="#000" 
-                tick={{ fill: '#000', fontSize: 12, fontWeight: 500 }}
+                tick={{ fill: '#000', fontSize: 10, fontWeight: 500 }}
                 axisLine={{ stroke: '#000', strokeWidth: 2 }}
+                angle={-45}
+                textAnchor="end"
+                height={80}
               />
               <YAxis 
                 tickFormatter={formatYAxis}
                 ticks={[500, 1000, 1500, 2000, 2500, 3000, 3500, 4000]}
                 stroke="#000"
-                tick={{ fill: '#000', fontSize: 14, fontWeight: 500 }}
+                tick={{ fill: '#000', fontSize: 12, fontWeight: 500 }}
                 axisLine={{ stroke: '#000', strokeWidth: 2 }}
+                width={50}
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar 
@@ -219,51 +223,52 @@ function WebsitesBarChart() {
         </div>
 
         {/* World Map Section */}
-        <div className="w-full max-w-6xl mx-auto p-8">
-          <div className="mb-6">
-            <h2 className="text-3xl font-bold text-black">Global Engagement Map</h2>
+        <div className="w-full max-w-6xl mx-auto p-4 sm:p-6 md:p-8">
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black">Global Engagement Map</h2>
           </div>
 
           {/* Stats Bar */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="rounded-lg p-4 border border-black bg-gray-100">
-              <p className="text-gray-600 text-sm">Total Views</p>
-              <p className="text-2xl font-bold text-black">{totalViews.toLocaleString()}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="rounded-lg p-3 sm:p-4 border border-black bg-gray-100">
+              <p className="text-gray-600 text-xs sm:text-sm">Total Views</p>
+              <p className="text-xl sm:text-2xl font-bold text-black">{totalViews.toLocaleString()}</p>
             </div>
-            <div className="rounded-lg p-4 border border-orange-600 bg-orange-100">
-              <p className="text-gray-600 text-sm">Total Clicks</p>
-              <p className="text-2xl font-bold text-orange-600">{totalClicks.toLocaleString()}</p>
+            <div className="rounded-lg p-3 sm:p-4 border border-orange-600 bg-orange-100">
+              <p className="text-gray-600 text-xs sm:text-sm">Total Clicks</p>
+              <p className="text-xl sm:text-2xl font-bold text-orange-600">{totalClicks.toLocaleString()}</p>
             </div>
-            <div className="rounded-lg p-4 border border-blue-600 bg-blue-100">
-              <p className="text-gray-600 text-sm">Click Rate</p>
-              <p className="text-2xl font-bold text-blue-600">{clickRate}%</p>
+            <div className="rounded-lg p-3 sm:p-4 border border-blue-600 bg-blue-100">
+              <p className="text-gray-600 text-xs sm:text-sm">Click Rate</p>
+              <p className="text-xl sm:text-2xl font-bold text-blue-600">{clickRate}%</p>
             </div>
           </div>
 
           {/* Map Container */}
-          <div ref={containerRef} className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl overflow-hidden" style={{ height: '600px' }}>
+          <div ref={containerRef} className="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg sm:rounded-xl overflow-hidden" style={{ height: '400px', minHeight: '300px' }}>
             <svg ref={svgRef} className="w-full h-full"></svg>
             
             {/* Tooltip */}
             {tooltipData && (
               <div
-                className="absolute bg-white border-2 border-gray-300 rounded-lg shadow-2xl px-4 py-3 pointer-events-none"
+                className="absolute bg-white border-2 border-gray-300 rounded-lg shadow-2xl px-3 py-2 pointer-events-none text-xs sm:text-sm"
                 style={{
-                  left: `${tooltipPos.x + 15}px`,
-                  top: `${tooltipPos.y - 10}px`,
-                  zIndex: 1000
+                  left: `${Math.min(tooltipPos.x + 15, (containerRef.current?.offsetWidth || 400) - 180)}px`,
+                  top: `${Math.max(tooltipPos.y - 10, 10)}px`,
+                  zIndex: 1000,
+                  maxWidth: '180px'
                 }}
               >
-                <div className="font-bold text-base text-gray-900 mb-2">{tooltipData.name}</div>
-                <div className="flex justify-between gap-6 mb-1">
+                <div className="font-bold text-sm sm:text-base text-gray-900 mb-1 sm:mb-2">{tooltipData.name}</div>
+                <div className="flex justify-between gap-3 sm:gap-6 mb-1">
                   <span className="text-gray-700">Views:</span>
                   <strong className="text-blue-600">{tooltipData.views.toLocaleString()}</strong>
                 </div>
-                <div className="flex justify-between gap-6 mb-1">
+                <div className="flex justify-between gap-3 sm:gap-6 mb-1">
                   <span className="text-gray-700">Clicks:</span>
                   <strong className="text-orange-600">{tooltipData.clicks.toLocaleString()}</strong>
                 </div>
-                <div className="flex justify-between gap-6 border-t border-gray-300 pt-2 mt-2">
+                <div className="flex justify-between gap-3 sm:gap-6 border-t border-gray-300 pt-1 sm:pt-2 mt-1 sm:mt-2">
                   <span className="text-gray-700">Click Rate:</span>
                   <strong className="text-green-600">{tooltipData.views > 0 ? ((tooltipData.clicks / tooltipData.views) * 100).toFixed(1) : '0'}%</strong>
                 </div>
@@ -271,15 +276,15 @@ function WebsitesBarChart() {
             )}
 
             {/* Legend */}
-            <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-4">
-              <div className="flex items-center gap-4">
+            <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 bg-white rounded-lg shadow-lg p-2 sm:p-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded bg-gray-400"></div>
-                  <span className="text-sm text-gray-700">Views Only</span>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-gray-400"></div>
+                  <span className="text-xs sm:text-sm text-gray-700">Views Only</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded bg-orange-500"></div>
-                  <span className="text-sm text-gray-700">Views + Clicks</span>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-orange-500"></div>
+                  <span className="text-xs sm:text-sm text-gray-700">Views + Clicks</span>
                 </div>
               </div>
             </div>

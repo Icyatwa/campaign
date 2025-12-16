@@ -65,56 +65,81 @@ function InfluencersPieChart() {
     };
 
     return (
-        <div className="w-full h-screen bg-white flex items-center justify-center p-8">
+        <div className="w-full min-h-screen bg-white flex items-center justify-center p-4 sm:p-8">
             <div className="w-full max-w-6xl">
-                <p className="text-xl text-gray-600 mb-8 text-center">
+                <p className="text-lg sm:text-xl text-gray-600 mb-4 sm:mb-8 text-center">
                     Total: $10 Million
                 </p>
                 
-                <div className="flex flex-col lg:flex-row items-start justify-center gap-6">
-                    <ResponsiveContainer width="35%" height={500}>
-                        <PieChart>
-                            <Pie
-                                data={data}
-                                cx="50%"
-                                cy="50%"
-                                labelLine={false}
-                                label={renderCustomLabel}
-                                outerRadius={180}
-                                fill="#8884d8"
-                                dataKey="value"
-                            >
-                                {data.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip content={<CustomTooltip />} />
-                        </PieChart>
-                    </ResponsiveContainer>
+                <div className="flex flex-col lg:flex-row items-start justify-center gap-4 sm:gap-6">
+                    <div className="w-full lg:w-auto flex justify-center">
+                        <div className="sm:hidden w-full">
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart>
+                                    <Pie
+                                        data={data}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={false}
+                                        label={renderCustomLabel}
+                                        outerRadius={120}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        {data.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip content={<CustomTooltip />} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="hidden sm:block w-full lg:w-[400px]">
+                            <ResponsiveContainer width="100%" height={500}>
+                                <PieChart>
+                                    <Pie
+                                        data={data}
+                                        cx="50%"
+                                        cy="50%"
+                                        labelLine={false}
+                                        label={renderCustomLabel}
+                                        outerRadius={180}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        {data.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip content={<CustomTooltip />} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
 
-                    <div className="bg-gray-50 p-6 rounded-lg border-2 border-black">
-                        <h2 className="text-xl font-bold mb-4 text-black">Revenue Breakdown</h2>
+                    <div className="bg-gray-50 p-4 sm:p-6 rounded-lg border-2 border-black w-full lg:w-auto">
+                        <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-black">Revenue Breakdown</h2>
                         <div className="space-y-2">
                             {data.map((item, index) => (
-                                <div key={index} className="flex items-center justify-between gap-4">
+                                <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-1 sm:gap-4">
                                     <div className="flex items-center gap-2">
                                         <div 
                                             className="w-4 h-4 rounded" 
                                             style={{ backgroundColor: COLORS[index] }}
                                         />
-                                        <span className="font-medium text-black">{item.name}</span>
+                                        <span className="font-medium text-black text-sm sm:text-base">{item.name}</span>
                                     </div>
-                                    <div className="text-right">
-                                        <span className="font-bold text-black">{formatCurrency(item.value)}</span>
-                                        <span className="text-gray-600 ml-2">({item.percentage}%)</span>
+                                    <div className="text-left sm:text-right ml-6 sm:ml-0">
+                                        <span className="font-bold text-black text-sm sm:text-base">{formatCurrency(item.value)}</span>
+                                        <span className="text-gray-600 ml-2 text-sm">({item.percentage}%)</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="bg-gray-50 p-6 rounded-lg border-2 border-black max-h-[500px] overflow-y-auto">
-                        <h2 className="text-xl font-bold mb-4 text-black">Platform Spending</h2>
+                    <div className="bg-gray-50 p-4 sm:p-6 rounded-lg border-2 border-black w-full lg:w-auto max-h-[400px] sm:max-h-[500px] overflow-y-auto">
+                        <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-black">Platform Spending</h2>
                         <div className="space-y-4">
                             {platformSpending.map((item, index) => (
                                 <div key={index} className="pb-3 border-b border-gray-300 last:border-b-0">

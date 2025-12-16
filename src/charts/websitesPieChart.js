@@ -74,7 +74,7 @@ function WebsitesPieChart() {
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        className="font-bold text-sm"
+        className="font-bold text-xs sm:text-sm"
       >
         {`${percentage}%`}
       </text>
@@ -82,64 +82,140 @@ function WebsitesPieChart() {
   };
 
   return (
-    <div className="w-full h-screen bg-white flex items-center justify-start p-8">
-      <div className="w-full max-w-4xl">
-        <p className="text-xl text-gray-600 mb-8 text-center">
+    <div className="w-full min-h-screen bg-white flex items-center justify-start p-4 sm:p-6 md:p-8">
+      <div className="w-full max-w-4xl mx-auto">
+        <p className="text-base sm:text-xl text-gray-600 mb-6 sm:mb-8 text-center">
           Total: $10 Million
         </p>
         
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-3">
-          <ResponsiveContainer width="40%" height={500}>
-            <PieChart>
-              <defs>
-                <linearGradient id="gradient-rj" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#3b82f6" />
-                  <stop offset="50%" stopColor="#eab308" />
-                  <stop offset="100%" stopColor="#22c55e" />
-                </linearGradient>
-                <linearGradient id="gradient-kt" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#ef4444" />
-                  <stop offset="100%" stopColor="#000000" />
-                </linearGradient>
-                <linearGradient id="gradient-iny" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#60a5fa" />
-                  <stop offset="50%" stopColor="#fcd34d" />
-                  <stop offset="100%" stopColor="#34d399" />
-                </linearGradient>
-              </defs>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={renderCustomLabel}
-                outerRadius={180}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-3">
+          {/* Pie Chart */}
+          <div className="w-full lg:w-[45%]">
+            <ResponsiveContainer width="100%" height={300} className="sm:hidden">
+              <PieChart>
+                <defs>
+                  <linearGradient id="gradient-rj" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#3b82f6" />
+                    <stop offset="50%" stopColor="#eab308" />
+                    <stop offset="100%" stopColor="#22c55e" />
+                  </linearGradient>
+                  <linearGradient id="gradient-kt" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#ef4444" />
+                    <stop offset="100%" stopColor="#000000" />
+                  </linearGradient>
+                  <linearGradient id="gradient-iny" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#60a5fa" />
+                    <stop offset="50%" stopColor="#fcd34d" />
+                    <stop offset="100%" stopColor="#34d399" />
+                  </linearGradient>
+                </defs>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomLabel}
+                  outerRadius={120}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
 
-          <div className="bg-gray-50 p-6 rounded-lg border-2 border-black">
-            <h2 className="text-xl font-bold mb-4 text-black">Revenue Breakdown</h2>
+            <ResponsiveContainer width="100%" height={400} className="hidden sm:block lg:hidden">
+              <PieChart>
+                <defs>
+                  <linearGradient id="gradient-rj" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#3b82f6" />
+                    <stop offset="50%" stopColor="#eab308" />
+                    <stop offset="100%" stopColor="#22c55e" />
+                  </linearGradient>
+                  <linearGradient id="gradient-kt" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#ef4444" />
+                    <stop offset="100%" stopColor="#000000" />
+                  </linearGradient>
+                  <linearGradient id="gradient-iny" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#60a5fa" />
+                    <stop offset="50%" stopColor="#fcd34d" />
+                    <stop offset="100%" stopColor="#34d399" />
+                  </linearGradient>
+                </defs>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomLabel}
+                  outerRadius={150}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+
+            <ResponsiveContainer width="100%" height={500} className="hidden lg:block">
+              <PieChart>
+                <defs>
+                  <linearGradient id="gradient-rj" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#3b82f6" />
+                    <stop offset="50%" stopColor="#eab308" />
+                    <stop offset="100%" stopColor="#22c55e" />
+                  </linearGradient>
+                  <linearGradient id="gradient-kt" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#ef4444" />
+                    <stop offset="100%" stopColor="#000000" />
+                  </linearGradient>
+                  <linearGradient id="gradient-iny" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#60a5fa" />
+                    <stop offset="50%" stopColor="#fcd34d" />
+                    <stop offset="100%" stopColor="#34d399" />
+                  </linearGradient>
+                </defs>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomLabel}
+                  outerRadius={180}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Legend/Breakdown */}
+          <div className="w-full lg:w-[55%] bg-gray-50 p-4 sm:p-6 rounded-lg border-2 border-black">
+            <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-black">Revenue Breakdown</h2>
             <div className="space-y-2">
               {data.map((item, index) => (
-                <div key={index} className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2">
+                <div key={index} className="flex items-center justify-between gap-2 sm:gap-4">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
                     <div 
-                      className="w-4 h-4 rounded" 
+                      className="w-3 h-3 sm:w-4 sm:h-4 rounded flex-shrink-0" 
                       style={{ backgroundColor: LEGEND_COLORS[item.name] }}
                     />
-                    <span className="font-medium text-black">{item.name}</span>
+                    <span className="font-medium text-black text-sm sm:text-base truncate">{item.name}</span>
                   </div>
-                  <div className="text-right">
-                    <span className="font-bold text-black">{formatCurrency(item.value)}</span>
-                    <span className="text-gray-600 ml-2">({item.percentage}%)</span>
+                  <div className="text-right flex-shrink-0">
+                    <span className="font-bold text-black text-sm sm:text-base">{formatCurrency(item.value)}</span>
+                    <span className="text-gray-600 ml-1 sm:ml-2 text-xs sm:text-sm">({item.percentage}%)</span>
                   </div>
                 </div>
               ))}
