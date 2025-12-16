@@ -1,5 +1,7 @@
+// InfluencersBarChart.js
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Instagram, Youtube, Twitter } from 'lucide-react';
 
 function InfluencersBarChart() {
   const [selectedPlatform, setSelectedPlatform] = useState('all');
@@ -49,8 +51,27 @@ function InfluencersBarChart() {
     }
   ];
 
+  const getBarColor = (item) => {
+    const hasInstagram = item.instagram > 0;
+    const hasYoutube = item.youtube > 0;
+    const hasTwitter = item.twitter > 0;
+    
+    if (hasInstagram && hasYoutube && hasTwitter) return 'url(#allThreeGradient)';
+    if (hasInstagram && hasYoutube) return 'url(#instagramYoutubeGradient)';
+    if (hasInstagram && hasTwitter) return 'url(#instagramTwitterGradient)';
+    if (hasYoutube && hasTwitter) return 'url(#youtubeTwitterGradient)';
+    if (hasInstagram) return '#EC4899'; // Pink for Instagram only
+    if (hasYoutube) return '#FF0000';
+    if (hasTwitter) return '#000000';
+    return '#94A3B8';
+  };
+
   const filteredData = selectedPlatform === 'all' 
-    ? data 
+    ? data.map(item => ({
+        name: item.name,
+        total: item.instagram + item.youtube + item.twitter,
+        fill: getBarColor(item)
+      }))
     : data.map(item => ({
         ...item,
         instagram: selectedPlatform === 'instagram' ? item.instagram : 0,
@@ -65,30 +86,150 @@ function InfluencersBarChart() {
     return value;
   };
 
+  const CustomXAxisTick = ({ x, y, payload }) => {
+    const influencer = data.find(d => d.name === payload.value);
+    if (!influencer) return null;
+
+    // For individual platform views, just show the name
+    if (selectedPlatform !== 'all') {
+      return (
+        <g transform={`translate(${x},${y})`}>
+          <text 
+            x={0} 
+            y={0} 
+            dy={16} 
+            textAnchor="middle" 
+            fill="#666"
+            fontSize={12}
+            fontWeight={500}
+          >
+            {payload.value}
+          </text>
+        </g>
+      );
+    }
+
+    // For 'all platforms' view, show icons and color indicator
+    const hasInstagram = influencer.instagram > 0;
+    const hasYoutube = influencer.youtube > 0;
+    const hasTwitter = influencer.twitter > 0;
+    
+    const iconSize = 14;
+    const iconSpacing = 18;
+    const activeIcons = [hasInstagram, hasYoutube, hasTwitter].filter(Boolean).length;
+    const totalWidth = activeIcons * iconSpacing - 4;
+    const startX = x - totalWidth / 2;
+    
+    let currentX = startX;
+
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text 
+          x={0} 
+          y={0} 
+          dy={16} 
+          textAnchor="middle" 
+          fill="#666"
+          fontSize={12}
+          fontWeight={500}
+        >
+          {payload.value}
+        </text>
+        
+        <g transform={`translate(0, 32)`}>
+          {hasInstagram && (
+            <g transform={`translate(${currentX - x}, 0)`}>
+              <rect x={-iconSize/2} y={-iconSize/2} width={iconSize} height={iconSize} fill="url(#instagramGradient)" rx={3} />
+              <Instagram size={iconSize - 4} x={-iconSize/2 + 2} y={-iconSize/2 + 2} color="white" strokeWidth={2.5} />
+              {(() => { currentX += iconSpacing; return null; })()}
+            </g>
+          )}
+          {hasYoutube && (
+            <g transform={`translate(${currentX - x}, 0)`}>
+              <rect x={-iconSize/2} y={-iconSize/2} width={iconSize} height={iconSize} fill="#FF0000" rx={3} />
+              <Youtube size={iconSize - 4} x={-iconSize/2 + 2} y={-iconSize/2 + 2} color="white" strokeWidth={2.5} />
+              {(() => { currentX += iconSpacing; return null; })()}
+            </g>
+          )}
+          {hasTwitter && (
+            <g transform={`translate(${currentX - x}, 0)`}>
+              <rect x={-iconSize/2} y={-iconSize/2} width={iconSize} height={iconSize} fill="#000000" rx={3} />
+              <Twitter size={iconSize - 4} x={-iconSize/2 + 2} y={-iconSize/2 + 2} color="white" strokeWidth={2.5} />
+            </g>
+          )}
+        </g>
+
+        <g transform={`translate(0, 50)`}>
+          <rect 
+            x={-totalWidth/2 - 2} 
+            y={-3} 
+            width={totalWidth + 4} 
+            height={6} 
+            fill={getBarColor(influencer)} 
+            rx={2}
+          />
+        </g>
+      </g>
+    );
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
-      const totalVisitors = payload.reduce((sum, entry) => sum + entry.value, 0);
-      return (
-        <div style={{
-          backgroundColor: '#fff',
-          border: '2px solid #e0e0e0',
-          borderRadius: '8px',
-          padding: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-        }}>
-          <p style={{ fontWeight: 'bold', margin: '0 0 8px 0', fontSize: '14px' }}>{label}</p>
-          {payload.map((entry, index) => (
-            entry.value > 0 && (
-              <p key={index} style={{ margin: '4px 0', fontSize: '13px', color: entry.fill }}>
-                <span style={{ fontWeight: '600' }}>{entry.name}:</span> {entry.value.toLocaleString()} visitors
+      if (selectedPlatform === 'all') {
+        const influencer = data.find(d => d.name === label);
+        return (
+          <div style={{
+            backgroundColor: '#fff',
+            border: '2px solid #e0e0e0',
+            borderRadius: '8px',
+            padding: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}>
+            <p style={{ fontWeight: 'bold', margin: '0 0 8px 0', fontSize: '14px' }}>{label}</p>
+            {influencer.instagram > 0 && (
+              <p style={{ margin: '4px 0', fontSize: '13px', color: '#E1306C' }}>
+                <span style={{ fontWeight: '600' }}>Instagram:</span> {influencer.instagram.toLocaleString()} visitors
               </p>
-            )
-          ))}
-          <p style={{ margin: '8px 0 0 0', paddingTop: '8px', borderTop: '1px solid #e0e0e0', fontWeight: 'bold', fontSize: '13px' }}>
-            Total: {totalVisitors.toLocaleString()} visitors
-          </p>
-        </div>
-      );
+            )}
+            {influencer.youtube > 0 && (
+              <p style={{ margin: '4px 0', fontSize: '13px', color: '#FF0000' }}>
+                <span style={{ fontWeight: '600' }}>YouTube:</span> {influencer.youtube.toLocaleString()} visitors
+              </p>
+            )}
+            {influencer.twitter > 0 && (
+              <p style={{ margin: '4px 0', fontSize: '13px', color: '#000000' }}>
+                <span style={{ fontWeight: '600' }}>X (Twitter):</span> {influencer.twitter.toLocaleString()} visitors
+              </p>
+            )}
+            <p style={{ margin: '8px 0 0 0', paddingTop: '8px', borderTop: '1px solid #e0e0e0', fontWeight: 'bold', fontSize: '13px' }}>
+              Total: {payload[0].value.toLocaleString()} visitors
+            </p>
+          </div>
+        );
+      } else {
+        const totalVisitors = payload.reduce((sum, entry) => sum + entry.value, 0);
+        return (
+          <div style={{
+            backgroundColor: '#fff',
+            border: '2px solid #e0e0e0',
+            borderRadius: '8px',
+            padding: '12px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          }}>
+            <p style={{ fontWeight: 'bold', margin: '0 0 8px 0', fontSize: '14px' }}>{label}</p>
+            {payload.map((entry, index) => (
+              entry.value > 0 && (
+                <p key={index} style={{ margin: '4px 0', fontSize: '13px', color: entry.fill }}>
+                  <span style={{ fontWeight: '600' }}>{entry.name}:</span> {entry.value.toLocaleString()} visitors
+                </p>
+              )
+            ))}
+            <p style={{ margin: '8px 0 0 0', paddingTop: '8px', borderTop: '1px solid #e0e0e0', fontWeight: 'bold', fontSize: '13px' }}>
+              Total: {totalVisitors.toLocaleString()} visitors
+            </p>
+          </div>
+        );
+      }
     }
     return null;
   };
@@ -116,7 +257,7 @@ function InfluencersBarChart() {
             onClick={() => setSelectedPlatform('instagram')}
             className={`px-6 py-2 rounded-lg font-semibold transition-all ${
               selectedPlatform === 'instagram' 
-                ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white shadow-md' 
+                ? 'bg-pink-500 text-white shadow-md' 
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
@@ -144,16 +285,15 @@ function InfluencersBarChart() {
           </button>
         </div>
 
-        <ResponsiveContainer width="100%" height={450}>
-          <BarChart data={filteredData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+        <ResponsiveContainer width="100%" height={500}>
+          <BarChart data={filteredData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
             <XAxis 
               dataKey="name" 
-              angle={-45}
-              textAnchor="end"
-              height={100}
+              height={selectedPlatform === 'all' ? 120 : 60}
               stroke="#666" 
-              tick={{ fill: '#666', fontSize: 12, fontWeight: 500 }}
+              tick={<CustomXAxisTick />}
+              interval={0}
             />
             <YAxis 
               tickFormatter={formatYAxis}
@@ -162,46 +302,69 @@ function InfluencersBarChart() {
               label={{ value: 'Visitors', angle: -90, position: 'insideLeft', style: { fill: '#666', fontWeight: 600 } }}
             />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.05)' }} />
-            <Legend 
-              wrapperStyle={{ paddingTop: '20px' }}
-              iconType="rect"
-            />
-            <Bar 
-              dataKey="instagram" 
-              name="Instagram"
-              fill="url(#instagramGradient)" 
-              radius={[6, 6, 0, 0]}
-              stackId="a"
-            />
-            <Bar 
-              dataKey="youtube" 
-              name="YouTube"
-              fill="#FF0000" 
-              radius={[6, 6, 0, 0]}
-              stackId="a"
-            />
-            <Bar 
-              dataKey="twitter" 
-              name="X (Twitter)"
-              fill="#000000" 
-              radius={[6, 6, 0, 0]}
-              stackId="a"
-            />
+            {selectedPlatform === 'all' ? (
+              <>
+                <Bar 
+                  dataKey="total" 
+                  name="Total Visitors"
+                  radius={[6, 6, 0, 0]}
+                />
+              </>
+            ) : (
+              <>
+                <Legend 
+                  wrapperStyle={{ paddingTop: '20px' }}
+                  iconType="rect"
+                />
+                <Bar 
+                  dataKey="instagram" 
+                  name="Instagram"
+                  fill="#EC4899" 
+                  radius={[6, 6, 0, 0]}
+                  stackId="a"
+                />
+                <Bar 
+                  dataKey="youtube" 
+                  name="YouTube"
+                  fill="#FF0000" 
+                  radius={[6, 6, 0, 0]}
+                  stackId="a"
+                />
+                <Bar 
+                  dataKey="twitter" 
+                  name="X (Twitter)"
+                  fill="#000000" 
+                  radius={[6, 6, 0, 0]}
+                  stackId="a"
+                />
+              </>
+            )}
             <defs>
               <linearGradient id="instagramGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#833AB4" />
                 <stop offset="50%" stopColor="#E1306C" />
                 <stop offset="100%" stopColor="#FD1D1D" />
               </linearGradient>
+              <linearGradient id="instagramYoutubeGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#E1306C" />
+                <stop offset="100%" stopColor="#FF0000" />
+              </linearGradient>
+              <linearGradient id="instagramTwitterGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#E1306C" />
+                <stop offset="100%" stopColor="#000000" />
+              </linearGradient>
+              <linearGradient id="youtubeTwitterGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FF0000" />
+                <stop offset="100%" stopColor="#000000" />
+              </linearGradient>
+              <linearGradient id="allThreeGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#E1306C" />
+                <stop offset="50%" stopColor="#FF0000" />
+                <stop offset="100%" stopColor="#000000" />
+              </linearGradient>
             </defs>
           </BarChart>
         </ResponsiveContainer>
-
-        <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-900">
-            <strong>💡 Tip:</strong> Use the platform filters above to focus on specific channels or view all platforms stacked together for a complete performance overview.
-          </p>
-        </div>
       </div>
     </div>
   );

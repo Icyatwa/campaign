@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 
@@ -21,6 +21,19 @@ function WebsitesBarChart() {
     { name: 'Taarifa', visitors: 2400 },
     { name: 'Blogs', visitors: 3500 }
   ];
+
+  const barColors = {
+    'Igihe': '#0062ffff',
+    'Newtimes': '#000000',
+    'Rwanda Jobs': 'url(#gradient-rj)',
+    'KT Press': 'url(#gradient-kt)',
+    'Kigali Today': '#fc0000ff',
+    'Inyarwanda': 'url(#gradient-iny)',
+    'Rushyashya': '#ff0040ff',
+    'Umuseke': '#000000',
+    'Taarifa': '#a30606ff',
+    'Blogs': '#ffbf00ff'
+  };
 
   const countryData = {
     '840': { name: 'United States', views: 1245, clicks: 423 },
@@ -162,6 +175,22 @@ function WebsitesBarChart() {
           <h2 className="text-3xl font-bold text-black mb-6">Website Visitors Analytics</h2>
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={visitorData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+              <defs>
+                <linearGradient id="gradient-rj" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#3b82f6" />
+                  <stop offset="50%" stopColor="#eab308" />
+                  <stop offset="100%" stopColor="#22c55e" />
+                </linearGradient>
+                <linearGradient id="gradient-kt" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ef4444" />
+                  <stop offset="100%" stopColor="#000000" />
+                </linearGradient>
+                <linearGradient id="gradient-iny" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#60a5fa" />
+                  <stop offset="50%" stopColor="#fcd34d" />
+                  <stop offset="100%" stopColor="#34d399" />
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
               <XAxis 
                 dataKey="name" 
@@ -179,9 +208,12 @@ function WebsitesBarChart() {
               <Tooltip content={<CustomTooltip />} />
               <Bar 
                 dataKey="visitors" 
-                fill="#000" 
                 radius={[8, 8, 0, 0]}
-              />
+              >
+                {visitorData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={barColors[entry.name]} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>

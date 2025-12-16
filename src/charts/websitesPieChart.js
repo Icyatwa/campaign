@@ -15,7 +15,31 @@ function WebsitesPieChart() {
     { name: 'Blogs', value: 700000, percentage: 7 }
   ];
 
-  const COLORS = ['#000000', '#1a1a1a', '#333333', '#4d4d4d', '#666666', '#808080', '#999999', '#b3b3b3', '#cccccc', '#e6e6e6'];
+  const COLORS = {
+    'Igihe': '#0062ffff',
+    'Newtimes': '#000000',
+    'Rwanda Jobs': 'url(#gradient-rj)',
+    'KT Press': 'url(#gradient-kt)',
+    'Kigali Today': '#fc0000ff',
+    'Inyarwanda': 'url(#gradient-iny)',
+    'Rushyashya': '#ff0040ff',
+    'Umuseke': '#000000',
+    'Taarifa': '#a30606ff',
+    'Blogs': '#ffbf00ff'
+  };
+
+  const LEGEND_COLORS = {
+    'Igihe': '#0062ffff',
+    'Newtimes': '#000000',
+    'Rwanda Jobs': '#22c55e',
+    'KT Press': '#ef4444',
+    'Kigali Today': '#fc0000ff',
+    'Inyarwanda': '#34d399',
+    'Rushyashya': '#ff0040ff',
+    'Umuseke': '#000000',
+    'Taarifa': '#a30606ff',
+    'Blogs': '#ffbf00ff'
+  };
 
   const formatCurrency = (value) => {
     if (value >= 1000000) {
@@ -67,6 +91,22 @@ function WebsitesPieChart() {
         <div className="flex flex-col lg:flex-row items-center justify-center gap-3">
           <ResponsiveContainer width="40%" height={500}>
             <PieChart>
+              <defs>
+                <linearGradient id="gradient-rj" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#3b82f6" />
+                  <stop offset="50%" stopColor="#eab308" />
+                  <stop offset="100%" stopColor="#22c55e" />
+                </linearGradient>
+                <linearGradient id="gradient-kt" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#ef4444" />
+                  <stop offset="100%" stopColor="#000000" />
+                </linearGradient>
+                <linearGradient id="gradient-iny" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#60a5fa" />
+                  <stop offset="50%" stopColor="#fcd34d" />
+                  <stop offset="100%" stopColor="#34d399" />
+                </linearGradient>
+              </defs>
               <Pie
                 data={data}
                 cx="50%"
@@ -78,7 +118,7 @@ function WebsitesPieChart() {
                 dataKey="value"
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
@@ -93,7 +133,7 @@ function WebsitesPieChart() {
                   <div className="flex items-center gap-2">
                     <div 
                       className="w-4 h-4 rounded" 
-                      style={{ backgroundColor: COLORS[index] }}
+                      style={{ backgroundColor: LEGEND_COLORS[item.name] }}
                     />
                     <span className="font-medium text-black">{item.name}</span>
                   </div>
