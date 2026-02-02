@@ -55,6 +55,15 @@ const Navbar = () => {
               </Button>
             </Link>
 
+            <Link to="/select-platforms">
+              <Button 
+                variant='ghost'
+                className="h-9 flex items-center space-x-2 focus:outline-none focus:ring-0"
+              >
+                <span>platforms</span>
+              </Button>
+            </Link>
+
             <Link to="/review" className="sm:hidden">
               <Button 
                 variant='ghost'
@@ -63,110 +72,6 @@ const Navbar = () => {
                 <span className="text-sm">Campaigns</span>
               </Button>
             </Link>
-
-            {isAuthenticated ? (
-              <div className="relative">
-                {/* Avatar Button */}
-                <button
-                  ref={buttonRef}
-                  onClick={toggleDropdown}
-                  className="flex items-center space-x-2 p-2 hover:bg-gray-50 transition-all duration-200 rounded-md"
-                >
-                  {user?.avatar ? (
-                    <img 
-                      src={user.avatar} 
-                      alt={user.name} 
-                      className="h-8 w-8 rounded-full object-cover border-2 border-gray-200"
-                    />
-                  ) : (
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center">
-                      <User size={16} className="text-white" />
-                    </div>
-                  )}
-                  <ChevronDown 
-                    size={14} 
-                    className={`text-gray-500 transition-transform duration-200 ${
-                      isDropdownOpen ? 'rotate-180' : ''
-                    }`} 
-                  />
-                </button>
-
-                {/* Dropdown Modal with Mac-like Animation */}
-                <div
-                  ref={dropdownRef}
-                  className={`absolute right-0 mt-3 w-72 sm:w-80 bg-white rounded-lg border border-gray-300 shadow-lg z-50 overflow-hidden transition-all duration-300 ease-out transform origin-top-right ${
-                    isDropdownOpen 
-                      ? 'opacity-100 scale-100 translate-y-0' 
-                      : 'opacity-0 scale-95 -translate-y-3 pointer-events-none'
-                  }`}
-                  style={{
-                    backdropFilter: 'blur(10px)',
-                    background: 'rgba(255, 255, 255, 0.98)'
-                  }}
-                >
-                  {/* User Info Section */}
-                  <div className="p-4 sm:p-5">
-                    <div className="flex items-center space-x-3 sm:space-x-4">
-                      {user?.avatar ? (
-                        <img 
-                          src={user.avatar} 
-                          alt={user.name} 
-                          className="h-12 w-12 sm:h-14 sm:w-14 rounded-full object-cover border-3 border-white shadow-md flex-shrink-0"
-                        />
-                      ) : (
-                        <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-md flex-shrink-0">
-                          <User size={24} className="text-white sm:w-7 sm:h-7" />
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-base sm:text-lg font-semibold text-gray-900 truncate mb-1">
-                          {user?.name || 'User'}
-                        </p>
-                        <div className="flex items-center space-x-2 text-xs sm:text-sm text-gray-600">
-                          <Mail size={12} className="sm:w-3.5 sm:h-3.5 flex-shrink-0" />
-                          <p className="truncate">{user?.email}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Logout Section */}
-                  <div className="border-t border-gray-100 py-2">
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center space-x-3 px-4 sm:px-5 py-2.5 sm:py-3 text-red-600 hover:bg-red-50 transition-all duration-150 w-full text-left group"
-                    >
-                      <div className="p-1 rounded-md group-hover:bg-red-100 transition-colors">
-                        <LogOut size={16} className="sm:w-4.5 sm:h-4.5 group-hover:text-red-700" />
-                      </div>
-                      <span className="text-sm sm:text-base group-hover:text-red-700">Logout</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                {/* Login Button */}
-                <Link to="/login">
-                  <Button 
-                    variant='primary'
-                    className="h-8 sm:h-9 px-3 sm:px-4 flex items-center focus:outline-none focus:ring-0 text-sm sm:text-base"
-                  >
-                    <span>Login</span>
-                  </Button>
-                </Link>
-
-                {/* Register Button */}
-                <Link to="/register">
-                  <Button 
-                    variant='secondary'
-                    className="h-8 sm:h-9 px-3 sm:px-4 flex items-center focus:outline-none focus:ring-0 text-sm sm:text-base"
-                  >
-                    <span>Register</span>
-                  </Button>
-                </Link>
-              </div>
-            )}
             
           </div>
         </div>
