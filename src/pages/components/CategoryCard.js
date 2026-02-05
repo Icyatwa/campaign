@@ -1,3 +1,4 @@
+// CategoryCard.js
 import React from 'react';
 import { X as XIcon, ChevronDown } from 'lucide-react';
 import PlatformCard from './PlatformCard';

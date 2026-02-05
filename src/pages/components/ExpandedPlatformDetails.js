@@ -9,12 +9,21 @@ function ExpandedPlatformDetails({
   isPlatformSelected, 
   togglePlatform,
   setExpandedPlatform,
-  getSocialIcon 
+  getSocialIcon,
+  selectedRateCards = {},
+  onRateCardToggle
 }) {
   if (!expandedPlatform) return null;
 
   const Icon = expandedPlatform.icon;
   const hasRateCards = expandedPlatform.rateCards && expandedPlatform.rateCards.length > 0;
+  const platformRateCards = selectedRateCards[expandedPlatform.id] || [];
+
+  const handleRateCardToggle = (rateCardIndex) => {
+    if (onRateCardToggle) {
+      onRateCardToggle(expandedPlatform.id, rateCardIndex);
+    }
+  };
 
   return (
     <div ref={expandedRef} className="mb-24 bg-white border-2 border-black rounded-2xl shadow-xl overflow-hidden animate-slideDown">
@@ -57,6 +66,8 @@ function ExpandedPlatformDetails({
           <RateCardSlider 
             rateCards={expandedPlatform.rateCards}
             platformName={expandedPlatform.name}
+            selectedRateCards={platformRateCards}
+            onRateCardToggle={handleRateCardToggle}
           />
         ) : (
           /* Fallback View if no rate cards exist */

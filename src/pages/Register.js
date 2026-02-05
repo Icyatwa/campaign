@@ -118,7 +118,7 @@ const Register = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.REACT_APP_API_URL || 'https://yepper-backend-ll50.onrender.com'}/api/auth/google`;
+    window.location.href = `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/auth/google`;
   };
 
   return (

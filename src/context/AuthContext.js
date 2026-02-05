@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const API_URL = process.env.REACT_APP_API_URL || 'https://yepper-backend-ll50.onrender.com';
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   // Set up axios interceptors for automatic token handling
   useEffect(() => {

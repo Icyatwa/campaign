@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Determine the API base URL based on environment
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://yepper-backend-ll50.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 // Create axios instance with default config
 const api = axios.create({

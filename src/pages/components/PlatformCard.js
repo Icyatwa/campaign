@@ -1,3 +1,4 @@
+// PlatformCard.js
 import React from 'react';
 import { ChevronDown, X as XIcon } from 'lucide-react';
 
