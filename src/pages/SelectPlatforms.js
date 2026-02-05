@@ -36,7 +36,7 @@ function Campaigns() {
   const [loading, setLoading] = useState(false);
 
   // API base URL
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  const API_URL = process.env.REACT_APP_API_URL || 'https://yepper-backend-ll50.onrender.com/api';
 
   // Initialize with all platforms selected
   const [selectedPlatforms, setSelectedPlatforms] = useState(() => {

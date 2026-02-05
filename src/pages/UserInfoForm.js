@@ -198,7 +198,7 @@ function UserInfoForm() {
   const handleResendVerification = async () => {
     try {
       setIsSubmitting(true);
-      const response = await fetch('http://localhost:5000/api/auth/resend-verification', {
+      const response = await fetch('https://yepper-backend-ll50.onrender.com/api/auth/resend-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: authData.email })
@@ -238,7 +238,7 @@ function UserInfoForm() {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/campaigns', {
+      const response = await fetch('https://yepper-backend-ll50.onrender.com/api/campaigns', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

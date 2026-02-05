@@ -17,7 +17,7 @@ const ForgotPassword = () => {
 
   try {
     // CHANGE THIS LINE - use local backend
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    const API_URL = process.env.REACT_APP_API_URL || 'https://yepper-backend-ll50.onrender.com';
     
     const response = await fetch(`${API_URL}/api/password/waitlist-forgot-password`, {
       method: 'POST',

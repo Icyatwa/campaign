@@ -16,7 +16,7 @@ function Dashboard() {
 
   const fetchCampaigns = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/campaigns/my-campaigns', {
+      const response = await fetch('https://yepper-backend-ll50.onrender.com/api/campaigns/my-campaigns', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
